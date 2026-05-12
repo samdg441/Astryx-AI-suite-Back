@@ -8,15 +8,17 @@ datasource db {
 }
 
 model AiTool {
-  id          Int      @id @default(autoincrement())
-  name        String   @map("nombre")
-  provider    String   @map("proveedor")
-  description String   @map("descripcion")
-  category    String   @map("categoria")
-  isActive    Boolean  @map("activa")
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
-  planLinks   PlanIa[]
+  id           Int      @id @default(autoincrement())
+  name         String   @map("nombre")
+  provider     String   @map("proveedor")
+  description  String   @map("descripcion")
+  category     String   @map("categoria")
+  /// Plan mínimo para usar la herramienta: free | pro | empresarial
+  requiredPlan String   @default("free") @map("plan_minimo")
+  isActive     Boolean  @map("activa")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+  planLinks    PlanIa[]
 
   @@map("ias")
 }
@@ -63,15 +65,21 @@ model Company {
 }
 
 model User {
-  id           Int           @id @default(autoincrement())
-  name         String        @map("nombre")
-  email        String        @unique
-  passwordHash String        @map("password_hash")
-  globalRole   String        @map("rol_global")
-  isActive     Boolean       @map("activo")
-  createdAt    DateTime      @map("created_at")
-  updatedAt    DateTime      @map("updated_at")
-  companyLinks CompanyUser[]
+  id                     Int           @id @default(autoincrement())
+  name                   String        @map("nombre")
+  email                  String        @unique
+  passwordHash           String        @map("password_hash")
+  globalRole             String        @map("rol_global")
+  stripeCustomerId       String?       @map("stripe_customer_id")
+  stripeSubscriptionId   String?       @map("stripe_subscription_id")
+  /// active | inactive | past_due — estado de facturación Stripe (no confundir con `activo` de cuenta)
+  subscriptionStatus     String        @default("inactive") @map("subscription_status")
+  /// free | pro | empresarial
+  planType               String        @default("free") @map("plan_type")
+  isActive               Boolean       @map("activo")
+  createdAt              DateTime      @default(now()) @map("created_at")
+  updatedAt              DateTime      @updatedAt @map("updated_at")
+  companyLinks           CompanyUser[]
 
   @@map("usuarios")
 }

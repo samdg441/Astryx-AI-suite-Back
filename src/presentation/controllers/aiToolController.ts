@@ -6,6 +6,18 @@ export class AiToolController {
 
   async index(_request: Request, response: Response) {
     const tools = await this.listAiTools.execute();
-    response.json({ data: tools });
+    const data = tools.map((t) => ({
+      id: t.id,
+      name: t.name,
+      provider: t.provider,
+      description: t.description,
+      category: t.category,
+      required_plan: t.requiredPlan,
+      isActive: t.isActive,
+      is_premium: t.requiredPlan !== "free",
+      createdAt: t.createdAt,
+      updatedAt: t.updatedAt,
+    }));
+    response.json({ data });
   }
 }
