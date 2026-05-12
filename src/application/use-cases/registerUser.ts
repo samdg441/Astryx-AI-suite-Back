@@ -18,12 +18,12 @@ export type RegisterUserResult = {
   name: string;
   email: string;
   globalRole: string;
-  planType: string;
+  planType: string | null;
   subscriptionStatus: string;
 };
 
 /**
- * La tabla `usuarios` en Supabase solo tiene `nombre`, no columnas separadas de empresa.
+ * La tabla `usuarios` no tiene columnas separadas de empresa.
  * Para cuentas EMPRESA guardamos en `nombre`: "Empresa — Persona de contacto".
  */
 function buildStoredName(input: RegisterUserInput): string {
@@ -38,24 +38,20 @@ function buildStoredName(input: RegisterUserInput): string {
   return person;
 }
 
-/**
- * Esquema SQL: CHECK (rol_global IN ('admin','usuario')).
- * Las altas por registro público siempre son `usuario`; `admin` no se asigna aquí.
- */
 const ROL_GLOBAL_REGISTRO = "usuario";
 
 function mapRegisterConstraintError(message: string): HttpError | null {
-  if (message.includes("usuarios_rol_global_check") || message.includes("rol_global")) {
+  if (message.includes("usuarios_rol_global_chk") || message.includes("rol_global")) {
     return new HttpError(
       400,
-      "rol_global no cumple el CHECK de la base de datos (solo se permiten los valores definidos en el esquema, p. ej. admin y usuario en minúsculas).",
+      "rol_global no cumple el CHECK de la base de datos (solo admin y usuario en minúsculas).",
     );
   }
-  if (message.includes("usuarios_plan_type_check") || message.includes("plan_type")) {
-    return new HttpError(400, "plan_type no cumple el CHECK de la base de datos.");
+  if (message.includes("usuarios_tipo_plan_chk") || message.includes("tipo_plan")) {
+    return new HttpError(400, "tipo_plan no cumple el CHECK de la base de datos.");
   }
-  if (message.includes("usuarios_subscription_status_check") || message.includes("subscription_status")) {
-    return new HttpError(400, "subscription_status no cumple el CHECK de la base de datos.");
+  if (message.includes("usuarios_estado_suscripcion_chk") || message.includes("estado_suscripcion")) {
+    return new HttpError(400, "estado_suscripcion no cumple el CHECK de la base de datos.");
   }
   return null;
 }
@@ -79,8 +75,8 @@ export async function registerUser(input: RegisterUserInput): Promise<RegisterUs
         passwordHash,
         globalRole,
         isActive: true,
-        planType: "free",
-        subscriptionStatus: "inactive",
+        planType: null,
+        subscriptionStatus: "inactivo",
       },
       select: {
         id: true,

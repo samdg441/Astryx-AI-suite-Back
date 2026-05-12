@@ -13,11 +13,12 @@ model AiTool {
   provider     String   @map("proveedor")
   description  String   @map("descripcion")
   category     String   @map("categoria")
-  /// Plan mínimo para usar la herramienta: free | pro | empresarial
+  urlApi       String?  @map("url_api")
+  /// Plan mínimo: free | basico | pro | empresarial
   requiredPlan String   @default("free") @map("plan_minimo")
   isActive     Boolean  @map("activa")
-  createdAt    DateTime @default(now()) @map("created_at")
-  updatedAt    DateTime @updatedAt @map("updated_at")
+  createdAt    DateTime @default(now()) @map("fecha_creacion")
+  updatedAt    DateTime @updatedAt @map("fecha_actualizacion")
   planLinks    PlanIa[]
 
   @@map("ias")
@@ -65,21 +66,21 @@ model Company {
 }
 
 model User {
-  id                     Int           @id @default(autoincrement())
-  name                   String        @map("nombre")
-  email                  String        @unique
-  passwordHash           String        @map("password_hash")
-  globalRole             String        @map("rol_global")
-  stripeCustomerId       String?       @map("stripe_customer_id")
-  stripeSubscriptionId   String?       @map("stripe_subscription_id")
-  /// active | inactive | past_due — estado de facturación Stripe (no confundir con `activo` de cuenta)
-  subscriptionStatus     String        @default("inactive") @map("subscription_status")
-  /// free | pro | empresarial
-  planType               String        @default("free") @map("plan_type")
-  isActive               Boolean       @map("activo")
-  createdAt              DateTime      @default(now()) @map("created_at")
-  updatedAt              DateTime      @updatedAt @map("updated_at")
-  companyLinks           CompanyUser[]
+  id                   Int           @id @default(autoincrement())
+  name                 String        @map("nombre")
+  email                String        @unique @map("correo")
+  passwordHash         String        @map("hash_contrasena")
+  globalRole           String        @map("rol_global")
+  stripeCustomerId     String?       @map("id_cliente_stripe")
+  stripeSubscriptionId String?       @map("id_suscripcion_stripe")
+  /// activo | inactivo | moroso (facturación; no confundir con columna `activo` de cuenta)
+  subscriptionStatus   String        @default("inactivo") @map("estado_suscripcion")
+  /// NULL = aún no eligió plan; free | basico | pro | empresarial
+  planType             String?       @map("tipo_plan")
+  isActive             Boolean       @map("activo")
+  createdAt            DateTime      @default(now()) @map("fecha_creacion")
+  updatedAt            DateTime      @updatedAt @map("fecha_actualizacion")
+  companyLinks         CompanyUser[]
 
   @@map("usuarios")
 }

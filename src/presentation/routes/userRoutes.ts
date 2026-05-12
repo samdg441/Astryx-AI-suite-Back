@@ -7,5 +7,6 @@ const router = Router();
 const controller = new UserController();
 
 router.get("/me", requireAuth, asyncHandler(controller.me.bind(controller)));
+router.post("/plan/gratis", requireAuth, asyncHandler(controller.chooseGratis.bind(controller)));
 
 export { router as userRoutes };

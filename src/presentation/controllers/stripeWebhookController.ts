@@ -62,7 +62,7 @@ export async function stripeWebhookHandler(request: Request, response: Response)
         where: { id: userId },
         data: {
           planType,
-          subscriptionStatus: "active",
+          subscriptionStatus: "activo",
           ...(customerId ? { stripeCustomerId: customerId } : {}),
           ...(subscriptionId ? { stripeSubscriptionId: subscriptionId } : {}),
         },
@@ -79,12 +79,12 @@ export async function stripeWebhookHandler(request: Request, response: Response)
       if (sub.status === "past_due") {
         await prisma.user.update({
           where: { id: row.id },
-          data: { subscriptionStatus: "past_due" },
+          data: { subscriptionStatus: "moroso" },
         });
       } else if (sub.status === "active") {
         await prisma.user.update({
           where: { id: row.id },
-          data: { subscriptionStatus: "active" },
+          data: { subscriptionStatus: "activo" },
         });
       }
       break;
@@ -95,7 +95,7 @@ export async function stripeWebhookHandler(request: Request, response: Response)
         where: { stripeSubscriptionId: sub.id },
         data: {
           planType: "free",
-          subscriptionStatus: "inactive",
+          subscriptionStatus: "inactivo",
           stripeSubscriptionId: null,
         },
       });

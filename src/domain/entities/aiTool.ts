@@ -4,7 +4,8 @@ export type AiTool = {
   provider: string;
   description: string;
   category: string;
-  /** free | pro | empresarial */
+  urlApi: string | null;
+  /** free | basico | pro | empresarial */
   requiredPlan: string;
   isActive: boolean;
   createdAt: Date;

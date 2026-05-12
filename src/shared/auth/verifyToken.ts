@@ -22,7 +22,7 @@ export function verifyAccessToken(token: string): JwtPayload {
   }
   const o = decoded as Record<string, unknown>;
   const email = typeof o.email === "string" ? o.email : "";
-  const planType = typeof o.planType === "string" ? o.planType : "free";
+  const planType = typeof o.planType === "string" ? o.planType : "sin_plan";
   return {
     sub: parseUserId(o.sub),
     email,

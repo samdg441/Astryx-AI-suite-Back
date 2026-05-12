@@ -12,6 +12,7 @@ export class AiToolController {
       provider: t.provider,
       description: t.description,
       category: t.category,
+      url_api: t.urlApi,
       required_plan: t.requiredPlan,
       isActive: t.isActive,
       is_premium: t.requiredPlan !== "free",

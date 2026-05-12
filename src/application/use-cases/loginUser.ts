@@ -15,7 +15,7 @@ export type LoginUserResult = {
     name: string;
     email: string;
     globalRole: string;
-    planType: string;
+    planType: string | null;
     subscriptionStatus: string;
   };
 };
@@ -35,7 +35,8 @@ export async function loginUser(input: LoginUserInput): Promise<LoginUserResult>
     throw new HttpError(401, "Invalid email or password");
   }
 
-  const token = signToken(user.id, user.email, user.planType);
+  const planForJwt = user.planType ?? "sin_plan";
+  const token = signToken(user.id, user.email, planForJwt);
 
   return {
     token,

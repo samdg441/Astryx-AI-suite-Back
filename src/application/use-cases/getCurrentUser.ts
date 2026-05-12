@@ -6,7 +6,7 @@ export type CurrentUserDto = {
   name: string;
   email: string;
   globalRole: string;
-  planType: string;
+  planType: string | null;
   subscriptionStatus: string;
   stripeCustomerId: string | null;
 };
