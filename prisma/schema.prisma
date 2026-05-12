@@ -7,103 +7,40 @@ datasource db {
   provider = "postgresql"
 }
 
+/// Tabla `ias` — misma forma que supabase_tablas_minimo_es.sql
 model AiTool {
-  id           Int      @id @default(autoincrement())
+  id           Int      @id @default(autoincrement()) /// nombre en BD: id
   name         String   @map("nombre")
-  provider     String   @map("proveedor")
+  provider     String?  @map("proveedor")
   description  String   @map("descripcion")
   category     String   @map("categoria")
   urlApi       String?  @map("url_api")
-  /// Plan mínimo: free | basico | pro | empresarial
+  /// CHECK: free | basico | pro | empresarial
   requiredPlan String   @default("free") @map("plan_minimo")
   isActive     Boolean  @map("activa")
   createdAt    DateTime @default(now()) @map("fecha_creacion")
   updatedAt    DateTime @updatedAt @map("fecha_actualizacion")
-  planLinks    PlanIa[]
 
   @@map("ias")
 }
 
-model SubscriptionPlan {
-  id           Int      @id @default(autoincrement())
-  name         String   @map("nombre")
-  description  String   @map("descripcion")
-  monthlyPrice Decimal  @map("precio_mensual")
-  userLimit    Int      @map("limite_usuarios")
-  status       String   @map("estado")
-  createdAt    DateTime @default(now()) @map("created_at")
-  updatedAt    DateTime @updatedAt @map("updated_at")
-  toolLinks    PlanIa[]
-
-  @@map("planes")
-}
-
-model ContactLead {
-  id        String   @id @default(uuid())
-  name      String
-  email     String
-  company   String?
-  message   String
-  source    String   @default("website")
-  createdAt DateTime @default(now())
-
-  @@map("contact_leads")
-}
-
-model Company {
-  id           Int           @id @default(autoincrement())
-  name         String        @map("nombre")
-  sector       String
-  contactEmail String        @map("email_contacto")
-  phone        String?
-  country      String        @map("pais")
-  isActive     Boolean       @map("activa")
-  createdAt    DateTime      @map("created_at")
-  updatedAt    DateTime      @map("updated_at")
-  userLinks    CompanyUser[]
-
-  @@map("empresas")
-}
-
+/// Tabla `usuarios` — misma forma que supabase_tablas_minimo_es.sql
 model User {
-  id                   Int           @id @default(autoincrement())
-  name                 String        @map("nombre")
-  email                String        @unique @map("correo")
-  passwordHash         String        @map("hash_contrasena")
-  globalRole           String        @map("rol_global")
-  stripeCustomerId     String?       @map("id_cliente_stripe")
-  stripeSubscriptionId String?       @map("id_suscripcion_stripe")
-  /// activo | inactivo | moroso (facturación; no confundir con columna `activo` de cuenta)
-  subscriptionStatus   String        @default("inactivo") @map("estado_suscripcion")
-  /// NULL = aún no eligió plan; free | basico | pro | empresarial
-  planType             String?       @map("tipo_plan")
-  isActive             Boolean       @map("activo")
-  createdAt            DateTime      @default(now()) @map("fecha_creacion")
-  updatedAt            DateTime      @updatedAt @map("fecha_actualizacion")
-  companyLinks         CompanyUser[]
+  id                   Int      @id @default(autoincrement())
+  name                 String   @map("nombre")
+  email                String   @unique @map("correo")
+  passwordHash         String   @map("hash_contrasena")
+  /// CHECK: admin | usuario
+  globalRole           String   @default("usuario") @map("rol_global")
+  stripeCustomerId     String?  @map("id_cliente_stripe")
+  stripeSubscriptionId String? @map("id_suscripcion_stripe")
+  /// CHECK: activo | inactivo | moroso
+  subscriptionStatus   String   @default("inactivo") @map("estado_suscripcion")
+  /// CHECK: NULL o free | basico | pro | empresarial
+  planType             String?  @map("tipo_plan")
+  isActive             Boolean  @default(true) @map("activo")
+  createdAt            DateTime @default(now()) @map("fecha_creacion")
+  updatedAt            DateTime @updatedAt @map("fecha_actualizacion")
 
   @@map("usuarios")
-}
-
-model CompanyUser {
-  id          Int      @id @default(autoincrement())
-  companyId   Int      @map("empresa_id")
-  userId      Int      @map("usuario_id")
-  companyRole String   @map("rol_empresa")
-  createdAt   DateTime @map("created_at")
-  company     Company  @relation(fields: [companyId], references: [id])
-  user        User     @relation(fields: [userId], references: [id])
-
-  @@map("empresa_usuarios")
-}
-
-model PlanIa {
-  id        Int              @id @default(autoincrement())
-  planId    Int              @map("plan_id")
-  iaId      Int              @map("ia_id")
-  createdAt DateTime         @map("created_at")
-  plan      SubscriptionPlan @relation(fields: [planId], references: [id])
-  ia        AiTool           @relation(fields: [iaId], references: [id])
-
-  @@map("plan_ias")
 }

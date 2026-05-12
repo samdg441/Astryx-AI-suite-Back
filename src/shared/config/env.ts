@@ -15,6 +15,13 @@ const envSchema = z.object({
   STRIPE_PRICE_BASICO: z.string().min(1).optional(),
   STRIPE_PRICE_PRO: z.string().min(1).optional(),
   STRIPE_PRICE_EMPRESARIAL: z.string().min(1).optional(),
+  /** true = permite POST /subscription/mock-activate (solo demos; false en producción) */
+  MOCK_CHECKOUT_ENABLED: z
+    .string()
+    .optional()
+    .transform((v) => v === "true" || v === "1")
+    .pipe(z.boolean())
+    .default(false),
 });
 
 export const env = envSchema.parse(process.env);

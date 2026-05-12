@@ -1,7 +1,7 @@
 export type AiTool = {
   id: number;
   name: string;
-  provider: string;
+  provider: string | null;
   description: string;
   category: string;
   urlApi: string | null;

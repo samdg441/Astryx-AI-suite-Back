@@ -1,17 +1,20 @@
 import type { ContactLead, CreateContactLeadInput } from "../../domain/entities/contactLead";
 import type { ContactLeadRepository } from "../../domain/repositories/contactLeadRepository";
-import { prisma } from "../database/prismaClient";
 
+/**
+ * Sin tabla `contact_leads` en el despliegue mínimo: no persistimos; evita error Prisma.
+ */
 export class PrismaContactLeadRepository implements ContactLeadRepository {
-  create(input: CreateContactLeadInput): Promise<ContactLead> {
-    return prisma.contactLead.create({
-      data: {
-        name: input.name,
-        email: input.email,
-        company: input.company,
-        message: input.message,
-        source: input.source ?? "website",
-      },
-    });
+  async create(input: CreateContactLeadInput): Promise<ContactLead> {
+    console.warn("[contact-leads] Sin tabla en BD; lead no guardado:", input.email);
+    return {
+      id: crypto.randomUUID(),
+      name: input.name,
+      email: input.email,
+      company: input.company ?? null,
+      message: input.message,
+      source: input.source ?? "website",
+      createdAt: new Date(),
+    };
   }
 }
