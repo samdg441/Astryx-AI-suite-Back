@@ -7,6 +7,7 @@ import { healthRoutes } from "./healthRoutes";
 import { subscriptionPlanRoutes } from "./subscriptionPlanRoutes";
 import { subscriptionRoutes } from "./subscriptionRoutes";
 import { userRoutes } from "./userRoutes";
+import { adminUserRoutes } from "./adminUserRoutes";
 
 const router = Router();
 
@@ -18,5 +19,6 @@ router.use("/checkout", checkoutRoutes);
 router.use("/tools", aiToolRoutes);
 router.use("/plans", subscriptionPlanRoutes);
 router.use("/contact-leads", contactLeadRoutes);
+router.use("/users", adminUserRoutes);
 
 export { router as apiRoutes };
