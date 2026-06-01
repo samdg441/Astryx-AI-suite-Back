@@ -91,16 +91,47 @@ Utilidades compartidas que no pertenecen a un modulo de negocio especifico.
 - `errors/`: errores comunes de aplicacion.
 - `http/`: middlewares y helpers HTTP.
 
-## Endpoints Iniciales
+## Endpoints principales
 
 Todos los endpoints usan el prefijo configurado en `API_PREFIX`, por defecto `/api/v1`.
 
-| Metodo | Ruta | Descripcion |
-| --- | --- | --- |
-| `GET` | `/api/v1/health` | Verifica que la API este viva |
-| `GET` | `/api/v1/tools` | Lista herramientas IA activas |
-| `GET` | `/api/v1/plans` | Lista planes activos |
-| `POST` | `/api/v1/contact-leads` | Registra un mensaje del formulario de contacto |
+### Auth
+
+| Metodo | Ruta | Auth | Descripcion |
+| --- | --- | --- | --- |
+| `POST` | `/auth/register` | No | Registro + JWT |
+| `POST` | `/auth/login` | No | Login + JWT |
+
+### Herramientas IA (`/tools`) — CRUD completo
+
+| Metodo | Ruta | Auth | Descripcion |
+| --- | --- | --- | --- |
+| `GET` | `/tools` | No | Lista paginada (`page`, `limit`, filtros: `category`, `requiredPlan`, `isActive`, `search`) → `{ data, meta }` |
+| `GET` | `/tools/:id` | No | Detalle por ID |
+| `POST` | `/tools` | Admin | Crear herramienta |
+| `PUT` | `/tools/:id` | Admin | Actualizar |
+| `DELETE` | `/tools/:id` | Admin | Eliminar |
+
+### Contactos (`/contact-leads`) — CRUD completo
+
+| Metodo | Ruta | Auth | Descripcion |
+| --- | --- | --- | --- |
+| `POST` | `/contact-leads` | No | Crear lead (formulario público) |
+| `GET` | `/contact-leads` | Admin | Lista paginada (`status`, `source`, `search`) → `{ data, meta }` |
+| `GET` | `/contact-leads/:id` | Admin | Detalle |
+| `PUT` | `/contact-leads/:id` | Admin | Actualizar estado (`nuevo` \| `leido` \| `cerrado`) |
+| `DELETE` | `/contact-leads/:id` | Admin | Eliminar |
+
+### Otros
+
+| Metodo | Ruta | Auth | Descripcion |
+| --- | --- | --- | --- |
+| `GET` | `/health` | No | Health check |
+| `GET` | `/plans` | No | Planes de suscripcion |
+| `GET` | `/user/me` | Usuario | Perfil actual |
+| `POST` | `/user/plan/gratis` | Usuario | Activar plan free |
+
+**Roles:** el JWT incluye `globalRole` (`admin` \| `usuario`). Rutas Admin devuelven `403` si el rol no es `admin`.
 
 Ejemplo para crear un contacto:
 
@@ -129,6 +160,7 @@ Variables principales:
 - `API_PREFIX`: prefijo global de endpoints.
 - `CORS_ORIGIN`: URL permitida del frontend.
 - `DATABASE_URL`: string de conexion PostgreSQL de Supabase.
+- `JWT_SECRET`: secreto para firmar JWT (minimo 16 caracteres).
 
 ## Supabase + Prisma
 

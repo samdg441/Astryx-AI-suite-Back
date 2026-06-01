@@ -36,7 +36,7 @@ export async function loginUser(input: LoginUserInput): Promise<LoginUserResult>
   }
 
   const planForJwt = user.planType ?? "sin_plan";
-  const token = signToken(user.id, user.email, planForJwt);
+  const token = signToken(user.id, user.email, planForJwt, user.globalRole);
 
   return {
     token,

@@ -1,4 +1,5 @@
 import cors from "cors";
+import type { CorsOptions } from "cors";
 import express from "express";
 import helmet from "helmet";
 import morgan from "morgan";
@@ -8,11 +9,37 @@ import { env } from "./shared/config/env";
 import { errorMiddleware } from "./shared/http/errorMiddleware";
 import { asyncHandler } from "./shared/http/asyncHandler";
 
+const LOCALHOST_ORIGIN = /^http:\/\/localhost:\d+$/;
+
+function createCorsOptions(): CorsOptions {
+  const allowedOrigins = env.CORS_ORIGIN.split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
+
+  return {
+    origin(origin, callback) {
+      if (!origin) {
+        callback(null, true);
+        return;
+      }
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true);
+        return;
+      }
+      if (env.NODE_ENV === "development" && LOCALHOST_ORIGIN.test(origin)) {
+        callback(null, true);
+        return;
+      }
+      callback(new Error(`CORS: origen no permitido (${origin})`));
+    },
+  };
+}
+
 export function createApp() {
   const app = express();
 
   app.use(helmet());
-  app.use(cors({ origin: env.CORS_ORIGIN }));
+  app.use(cors(createCorsOptions()));
 
   /** Stripe webhook: raw body obligatorio para verificar la firma (no pasar por express.json). */
   app.post(

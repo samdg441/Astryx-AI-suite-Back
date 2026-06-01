@@ -42,5 +42,25 @@ model User {
   createdAt            DateTime @default(now()) @map("fecha_creacion")
   updatedAt            DateTime @updatedAt @map("fecha_actualizacion")
 
+  contactLeads ContactLead[]
+
   @@map("usuarios")
+}
+
+/// Mensajes del formulario de contacto (FK opcional al usuario autenticado)
+model ContactLead {
+  id        String   @id @default(uuid()) @db.Uuid
+  name      String   @map("nombre")
+  email     String   @map("correo")
+  company   String?  @map("empresa")
+  message   String   @map("mensaje")
+  source    String   @default("website") @map("origen")
+  /// CHECK: nuevo | leido | cerrado
+  status    String   @default("nuevo") @map("estado")
+  userId    Int?     @map("usuario_id")
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  createdAt DateTime @default(now()) @map("fecha_creacion")
+  updatedAt DateTime @updatedAt @map("fecha_actualizacion")
+
+  @@map("contactos")
 }

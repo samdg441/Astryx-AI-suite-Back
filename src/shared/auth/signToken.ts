@@ -1,14 +1,20 @@
 import jwt from "jsonwebtoken";
+import { env } from "../config/env";
 
 export type JwtPayload = {
   sub: number;
   email: string;
   planType: string;
+  globalRole: string;
 };
 
-/** Secreto fijo en código por ahora; en producción mover a variable de entorno segura. */
-const JWT_SIGNING_SECRET = "astryx-dev-jwt-secret-min-16";
-
-export function signToken(userId: number, email: string, planType: string): string {
-  return jwt.sign({ sub: userId, email, planType }, JWT_SIGNING_SECRET, { expiresIn: "7d" });
+export function signToken(
+  userId: number,
+  email: string,
+  planType: string,
+  globalRole: string,
+): string {
+  return jwt.sign({ sub: userId, email, planType, globalRole }, env.JWT_SECRET, {
+    expiresIn: "7d",
+  });
 }

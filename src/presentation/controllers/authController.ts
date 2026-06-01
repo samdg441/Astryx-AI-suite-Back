@@ -42,7 +42,12 @@ export class AuthController {
       accountKind: input.accountKind,
       companyName: input.companyName ?? null,
     });
-    const token = signToken(user.id, user.email, user.planType ?? "sin_plan");
+    const token = signToken(
+      user.id,
+      user.email,
+      user.planType ?? "sin_plan",
+      user.globalRole,
+    );
     response.status(201).json({
       data: {
         user,

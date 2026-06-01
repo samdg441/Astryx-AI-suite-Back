@@ -22,6 +22,7 @@ const envSchema = z.object({
     .transform((v) => v === "true" || v === "1")
     .pipe(z.boolean())
     .default(false),
+  JWT_SECRET: z.string().min(16, "JWT_SECRET must be at least 16 characters"),
 });
 
 export const env = envSchema.parse(process.env);

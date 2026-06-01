@@ -1,7 +1,6 @@
 import jwt from "jsonwebtoken";
 import type { JwtPayload } from "./signToken";
-
-const JWT_SIGNING_SECRET = "astryx-dev-jwt-secret-min-16";
+import { env } from "../config/env";
 
 function parseUserId(sub: unknown): number {
   if (typeof sub === "number" && Number.isFinite(sub)) {
@@ -14,18 +13,20 @@ function parseUserId(sub: unknown): number {
   return n;
 }
 
-/** Valida JWT de acceso y devuelve payload tipado (incluye planType). */
+/** Valida JWT de acceso y devuelve payload tipado. */
 export function verifyAccessToken(token: string): JwtPayload {
-  const decoded = jwt.verify(token, JWT_SIGNING_SECRET);
+  const decoded = jwt.verify(token, env.JWT_SECRET);
   if (typeof decoded !== "object" || decoded === null) {
     throw new Error("Invalid token payload");
   }
   const o = decoded as Record<string, unknown>;
   const email = typeof o.email === "string" ? o.email : "";
   const planType = typeof o.planType === "string" ? o.planType : "sin_plan";
+  const globalRole = typeof o.globalRole === "string" ? o.globalRole : "usuario";
   return {
     sub: parseUserId(o.sub),
     email,
     planType,
+    globalRole,
   };
 }

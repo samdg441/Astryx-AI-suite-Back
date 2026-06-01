@@ -29,7 +29,12 @@ export class SubscriptionController {
     const { targetPlan } = mockBody.parse(request.body);
     await mockActivatePlan(auth.userId, targetPlan as MockPlanTarget);
     const user = await getCurrentUser(auth.userId);
-    const token = signToken(user.id, user.email, user.planType ?? "sin_plan");
+    const token = signToken(
+      user.id,
+      user.email,
+      user.planType ?? "sin_plan",
+      user.globalRole,
+    );
     response.status(200).json({
       data: {
         token,

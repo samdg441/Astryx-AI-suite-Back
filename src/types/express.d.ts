@@ -7,6 +7,7 @@ declare module "express-serve-static-core" {
       userId: number;
       email: string;
       planType: string;
+      globalRole: string;
     };
   }
 }

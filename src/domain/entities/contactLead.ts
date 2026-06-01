@@ -5,7 +5,10 @@ export type ContactLead = {
   company: string | null;
   message: string;
   source: string;
+  status: string;
+  userId: number | null;
   createdAt: Date;
+  updatedAt: Date;
 };
 
 export type CreateContactLeadInput = {
@@ -14,4 +17,10 @@ export type CreateContactLeadInput = {
   company?: string;
   message: string;
   source?: string;
+  userId?: number | null;
+};
+
+export type UpdateContactLeadInput = {
+  status?: string;
+  company?: string | null;
 };

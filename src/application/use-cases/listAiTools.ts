@@ -1,9 +1,12 @@
-import type { AiToolRepository } from "../../domain/repositories/aiToolRepository";
+import type {
+  AiToolListFilters,
+  AiToolRepository,
+} from "../../domain/repositories/aiToolRepository";
 
 export class ListAiTools {
   constructor(private readonly aiToolRepository: AiToolRepository) {}
 
-  execute() {
-    return this.aiToolRepository.findActive();
+  execute(filters: AiToolListFilters, page: number, limit: number) {
+    return this.aiToolRepository.findMany(filters, page, limit);
   }
 }

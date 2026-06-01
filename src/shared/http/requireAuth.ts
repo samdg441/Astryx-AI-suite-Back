@@ -15,6 +15,7 @@ export const requireAuth: RequestHandler = (req, _res, next) => {
       userId: payload.sub,
       email: payload.email,
       planType: payload.planType,
+      globalRole: payload.globalRole,
     };
     next();
   } catch {

@@ -40,6 +40,11 @@ export const errorMiddleware: ErrorRequestHandler = (error, _request, response, 
     return;
   }
 
+  if (prismaCode === "P2025") {
+    response.status(404).json({ message: "Resource not found" });
+    return;
+  }
+
   console.error(error);
   response.status(500).json({ message: "Internal server error" });
 };
