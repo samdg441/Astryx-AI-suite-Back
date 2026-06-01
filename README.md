@@ -122,11 +122,17 @@ Todos los endpoints usan el prefijo configurado en `API_PREFIX`, por defecto `/a
 | `PUT` | `/contact-leads/:id` | Admin | Actualizar estado (`nuevo` \| `leido` \| `cerrado`) |
 | `DELETE` | `/contact-leads/:id` | Admin | Eliminar |
 
+### Usuarios (`/users`) — Admin
+
+| Metodo | Ruta | Auth | Descripcion |
+| --- | --- | --- | --- |
+| `GET` | `/users` | Admin | Lista paginada de usuarios (`page`, `limit`) → `{ data, meta }` |
+
 ### Otros
 
 | Metodo | Ruta | Auth | Descripcion |
 | --- | --- | --- | --- |
-| `GET` | `/health` | No | Health check |
+| `GET` | `/health` | No | Health check + estado de BD (`database: connected`) |
 | `GET` | `/plans` | No | Planes de suscripcion |
 | `GET` | `/user/me` | Usuario | Perfil actual |
 | `POST` | `/user/plan/gratis` | Usuario | Activar plan free |
@@ -196,6 +202,13 @@ npm run prisma:migrate   # Crea/aplica migraciones
 npm run prisma:studio    # Abre Prisma Studio
 npm run prisma:seed      # Inserta datos iniciales
 ```
+
+## Despliegue (Render)
+
+- **Build:** `npm install && npm run build`
+- **Start:** `npm start` (usa `tsx` + Prisma ESM)
+- Variables obligatorias: `DATABASE_URL` (pooler `?pgbouncer=true`), `DIRECT_URL`, `JWT_SECRET`, `CORS_ORIGIN`, `NODE_ENV=production`
+- Demo: `https://astryx-ai-suite-back.onrender.com/api/v1/health`
 
 ## Roadmap Sugerido
 
