@@ -43,8 +43,24 @@ model User {
   updatedAt            DateTime @updatedAt @map("fecha_actualizacion")
 
   contactLeads ContactLead[]
+  files        UserFile[]
 
   @@map("usuarios")
+}
+
+/// Archivos subidos por el usuario (metadatos en BD; binario en Supabase Storage)
+model UserFile {
+  id           String   @id @default(uuid()) @db.Uuid
+  userId       Int      @map("usuario_id")
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  originalName String   @map("nombre_original")
+  mimeType     String   @map("tipo_mime")
+  sizeBytes    Int      @map("tamano_bytes")
+  storagePath  String   @map("ruta_storage")
+  createdAt    DateTime @default(now()) @map("fecha_creacion")
+
+  @@index([userId])
+  @@map("archivos_usuario")
 }
 
 /// Mensajes del formulario de contacto (FK opcional al usuario autenticado)

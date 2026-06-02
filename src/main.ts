@@ -1,4 +1,5 @@
 import { createApp } from "./app";
+import { logAiProvidersOnStartup } from "./infrastructure/ai/verifyAiProviders";
 import { prisma } from "./infrastructure/database/prismaClient";
 import { env } from "./shared/config/env";
 
@@ -6,6 +7,7 @@ const app = createApp();
 
 const server = app.listen(env.PORT, () => {
   console.log(`Astryx API running on http://localhost:${env.PORT}${env.API_PREFIX}`);
+  void logAiProvidersOnStartup();
 });
 
 async function shutdown() {
