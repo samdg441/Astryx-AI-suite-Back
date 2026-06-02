@@ -2,11 +2,21 @@ import type { Request, Response } from "express";
 import { z } from "zod";
 import { getCurrentUser } from "../../application/use-cases/getCurrentUser";
 import { getSubscriptionStatus } from "../../application/use-cases/getSubscriptionStatus";
-import { mockActivatePlan, type MockPlanTarget } from "../../application/use-cases/mockActivatePlan";
+import {
+  mockActivatePlan,
+  type MockPaymentMethod,
+  type MockPlanTarget,
+} from "../../application/use-cases/mockActivatePlan";
 import { signToken } from "../../shared/auth/signToken";
 
 const mockBody = z.object({
   targetPlan: z.enum(["free", "basico", "pro", "empresarial"]),
+  paymentMethod: z
+    .object({
+      last4: z.string().regex(/^\d{4}$/),
+      brand: z.enum(["visa", "mastercard", "amex"]),
+    })
+    .optional(),
 });
 
 export class SubscriptionController {
@@ -26,8 +36,12 @@ export class SubscriptionController {
       response.status(401).json({ message: "Unauthorized" });
       return;
     }
-    const { targetPlan } = mockBody.parse(request.body);
-    await mockActivatePlan(auth.userId, targetPlan as MockPlanTarget);
+    const { targetPlan, paymentMethod } = mockBody.parse(request.body);
+    await mockActivatePlan(
+      auth.userId,
+      targetPlan as MockPlanTarget,
+      paymentMethod as MockPaymentMethod | undefined,
+    );
     const user = await getCurrentUser(auth.userId);
     const token = signToken(
       user.id,
