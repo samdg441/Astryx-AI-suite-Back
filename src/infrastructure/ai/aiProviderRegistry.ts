@@ -19,7 +19,7 @@ export async function completeChat(input: ChatCompletionInput): Promise<ChatComp
         const fallback = await completeWithGroq(input);
         return {
           ...fallback,
-          content: `[OpenRouter no disponible — respuesta vía Groq]\n\n${fallback.content}`,
+          content: `Groq (respaldo OpenRouter)\n\n${fallback.content}`,
         };
       }
     case "groq":

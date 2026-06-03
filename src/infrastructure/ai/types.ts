@@ -1,4 +1,3 @@
-/** Proveedores de inferencia soportados por Astryx */
 export type AiProviderId = "pollinations" | "openrouter" | "groq";
 
 export type ChatCompletionInput = {

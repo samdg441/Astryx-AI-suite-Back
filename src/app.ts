@@ -41,7 +41,7 @@ export function createApp() {
   app.use(helmet());
   app.use(cors(createCorsOptions()));
 
-  /** Stripe webhook: raw body obligatorio para verificar la firma (no pasar por express.json). */
+  /** Stripe webhook: body raw para verificar firma */
   app.post(
     `${env.API_PREFIX}/webhooks/stripe`,
     express.raw({ type: "application/json" }),

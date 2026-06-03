@@ -15,7 +15,6 @@ import { fileRoutes } from "./fileRoutes";
 
 const router = Router();
 
-/** Página de bienvenida al abrir /api/v1 en el navegador */
 router.get("/", (_req, res) => {
   const base = env.API_PREFIX;
   res.status(200).json({
@@ -32,7 +31,6 @@ router.get("/", (_req, res) => {
       chat: `${base}/chat (POST, JWT)`,
       files: `${base}/files (JWT)`,
     },
-    hint: "Abre /health para comprobar servidor y base de datos.",
   });
 });
 

@@ -6,6 +6,6 @@ export class SubscriptionPlanController {
 
   async index(_request: Request, response: Response) {
     const plans = await this.listSubscriptionPlans.execute();
-    response.json({ data: plans });
+    response.status(200).json({ data: plans });
   }
 }

@@ -1,5 +1,6 @@
 import type { Request, Response } from "express";
 import { prisma } from "../../infrastructure/database/prismaClient";
+import { isStorageConfigured } from "../../infrastructure/storage/supabaseStorageClient";
 
 export class HealthController {
   async show(_request: Request, response: Response) {
@@ -16,6 +17,7 @@ export class HealthController {
       status: ok ? "ok" : "degraded",
       service: "astryx-ai-suite-back",
       database,
+      storage: isStorageConfigured() ? "configured" : "not_configured",
       timestamp: new Date().toISOString(),
     });
   }

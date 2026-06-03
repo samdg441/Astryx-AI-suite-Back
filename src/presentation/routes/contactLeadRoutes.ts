@@ -20,10 +20,8 @@ const controller = new ContactLeadController(
   new DeleteContactLead(repository),
 );
 
-/** Público: formulario de contacto */
 router.post("/", asyncHandler(controller.create.bind(controller)));
 
-/** Admin: gestión de leads */
 router.get("/", requireAuth, requireAdmin, asyncHandler(controller.index.bind(controller)));
 router.get("/:id", requireAuth, requireAdmin, asyncHandler(controller.show.bind(controller)));
 router.put("/:id", requireAuth, requireAdmin, asyncHandler(controller.update.bind(controller)));

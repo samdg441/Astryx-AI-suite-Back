@@ -22,10 +22,7 @@ export type RegisterUserResult = {
   subscriptionStatus: string;
 };
 
-/**
- * La tabla `usuarios` no tiene columnas separadas de empresa.
- * Para cuentas EMPRESA guardamos en `nombre`: "Empresa — Persona de contacto".
- */
+// Cuenta EMPRESA: nombre guardado como "Empresa — contacto"
 function buildStoredName(input: RegisterUserInput): string {
   const person = input.name.trim();
   if (input.accountKind === "EMPRESA") {

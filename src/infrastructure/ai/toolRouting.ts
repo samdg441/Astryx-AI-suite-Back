@@ -1,7 +1,7 @@
 import { isOpenRouterConfigured } from "./openRouterProvider";
 import type { AiProviderId } from "./types";
 
-/** Plan mínimo por herramienta (alineado con frontend sidebarCatalog) */
+/** Plan mínimo por herramienta (alineado con sidebar del front) */
 export const TOOL_MIN_PLAN: Record<string, string> = {
   "dev-code-assistant": "free",
   "dev-bug-finder": "basico",
@@ -16,12 +16,6 @@ export const TOOL_MIN_PLAN: Record<string, string> = {
   "biz-pitch": "empresarial",
 };
 
-/**
- * Tres proveedores para la entrega:
- * - Pollinations → imágenes
- * - OpenRouter → marketing / negocio (texto)
- * - Groq → desarrollo (código)
- */
 export function resolveProvider(toolId?: string): AiProviderId {
   const id = (toolId ?? "").toLowerCase();
 

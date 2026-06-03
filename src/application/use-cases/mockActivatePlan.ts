@@ -11,9 +11,6 @@ export type MockPaymentMethod = {
   brand: "visa" | "mastercard" | "amex";
 };
 
-/**
- * Solo para demos / sin Stripe. Desactivar en producción con MOCK_CHECKOUT_ENABLED=false.
- */
 export async function mockActivatePlan(
   userId: number,
   targetPlan: MockPlanTarget,

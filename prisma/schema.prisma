@@ -7,7 +7,7 @@ datasource db {
   provider = "postgresql"
 }
 
-/// Tabla `ias` — misma forma que supabase_tablas_minimo_es.sql
+/// Tabla `ias`
 model AiTool {
   id           Int      @id @default(autoincrement()) /// nombre en BD: id
   name         String   @map("nombre")
@@ -24,7 +24,7 @@ model AiTool {
   @@map("ias")
 }
 
-/// Tabla `usuarios` — misma forma que supabase_tablas_minimo_es.sql
+/// Tabla `usuarios`
 model User {
   id                   Int      @id @default(autoincrement())
   name                 String   @map("nombre")
@@ -48,7 +48,7 @@ model User {
   @@map("usuarios")
 }
 
-/// Archivos subidos por el usuario (metadatos en BD; binario en Supabase Storage)
+/// Archivos del usuario (binario en Supabase Storage)
 model UserFile {
   id           String   @id @default(uuid()) @db.Uuid
   userId       Int      @map("usuario_id")
