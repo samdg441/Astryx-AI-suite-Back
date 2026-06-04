@@ -54,7 +54,7 @@ JWT: `Authorization: Bearer <token>`. Rol `admin` en rutas de administración.
 |-----------|-----|----------|
 | Groq | código (`dev-*`) | `GROQ_API_KEY` |
 | OpenRouter | marketing (`mkt-*`, `biz-*`) | `OPENROUTER_API_KEY` (opcional) |
-| Pollinations | imágenes (`des-image-gen`) | — |
+| Cloudflare Workers AI | imágenes (`des-image-gen`) | `CLOUDFLARE_ACCOUNT_ID`, `CLOUDFLARE_AI_TOKEN` |
 
 `npm run ai:verify` comprueba conectividad.
 

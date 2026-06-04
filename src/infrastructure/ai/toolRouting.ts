@@ -20,7 +20,7 @@ export function resolveProvider(toolId?: string): AiProviderId {
   const id = (toolId ?? "").toLowerCase();
 
   if (id === "des-image-gen" || id.includes("image")) {
-    return "pollinations";
+    return "cloudflare";
   }
 
   if (

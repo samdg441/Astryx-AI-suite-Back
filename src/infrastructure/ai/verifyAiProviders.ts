@@ -1,14 +1,21 @@
+import { verifyCloudflareImage, isCloudflareImageConfigured } from "./cloudflareImageProvider";
 import { verifyGroq, isGroqConfigured } from "./groqProvider";
 import { verifyOpenRouter, isOpenRouterConfigured } from "./openRouterProvider";
-import { verifyPollinations } from "./pollinationsProvider";
 import type { AiProviderCheck } from "./types";
 
 export async function checkAllAiProviders(): Promise<AiProviderCheck[]> {
-  const [pollinations, openrouter, groq] = await Promise.all([
+  const [cloudflare, openrouter, groq] = await Promise.all([
     (async (): Promise<AiProviderCheck> => {
-      const r = await verifyPollinations();
+      if (!isCloudflareImageConfigured()) {
+        return {
+          provider: "cloudflare",
+          status: "not_configured",
+          message: "CLOUDFLARE_ACCOUNT_ID / CLOUDFLARE_AI_TOKEN no configurados",
+        };
+      }
+      const r = await verifyCloudflareImage();
       return {
-        provider: "pollinations",
+        provider: "cloudflare",
         status: r.ok ? "ok" : "error",
         message: r.message,
         latencyMs: r.latencyMs,
@@ -48,12 +55,12 @@ export async function checkAllAiProviders(): Promise<AiProviderCheck[]> {
     })(),
   ]);
 
-  return [pollinations, openrouter, groq];
+  return [cloudflare, openrouter, groq];
 }
 
 /** Logs al arrancar el servidor. */
 export async function logAiProvidersOnStartup(): Promise<void> {
-  console.log("\n[Astryx AI] Verificando proveedores (Pollinations → OpenRouter → Groq)…\n");
+  console.log("\n[Astryx AI] Verificando proveedores (Cloudflare → OpenRouter → Groq)…\n");
 
   const checks = await checkAllAiProviders();
 

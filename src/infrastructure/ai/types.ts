@@ -1,4 +1,4 @@
-export type AiProviderId = "pollinations" | "openrouter" | "groq";
+export type AiProviderId = "cloudflare" | "openrouter" | "groq";
 
 export type ChatCompletionInput = {
   message: string;
