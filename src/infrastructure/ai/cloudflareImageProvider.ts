@@ -1,6 +1,9 @@
 import { env } from "../../shared/config/env";
 import { HttpError } from "../../shared/errors/httpError";
+import { enhanceImagePrompt } from "./groqProvider";
 import type { ChatCompletionInput, ChatCompletionResult } from "./types";
+
+const STEPS = 8;
 
 const RUN_BASE = "https://api.cloudflare.com/client/v4/accounts";
 
@@ -40,7 +43,7 @@ async function requestImage(prompt: string, timeoutMs: number): Promise<string> 
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ prompt, steps: 4 }),
+      body: JSON.stringify({ prompt, steps: STEPS }),
     });
 
     const body = (await res.json()) as CloudflareImageResponse;
@@ -69,7 +72,8 @@ export async function completeWithCloudflareImage(
     throw new HttpError(400, "El prompt de imagen no puede estar vacío");
   }
 
-  const base64 = await requestImage(prompt.slice(0, 2048), 45_000);
+  const enhanced = await enhanceImagePrompt(prompt);
+  const base64 = await requestImage(enhanced.slice(0, 2048), 45_000);
 
   return {
     provider: "cloudflare",
